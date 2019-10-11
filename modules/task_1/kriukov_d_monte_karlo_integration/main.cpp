@@ -7,7 +7,7 @@
 
 #define POINT_COUNT 10000
 #define ABS_ERROR 0.5
-#define M_PI 3.14159265358979323846
+#define PI 3.14159265358979323846
 
 double linear_function(double x) {
     return x;
@@ -68,7 +68,7 @@ TEST(Monte_Carlo_Integration_MPI, Trigonometric_function_integration) {
     srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double upper_limit = M_PI / 2;
+    const double upper_limit = PI / 2;
     const double lower_limit = 0.0;
 
     double integration_result = monteCarloIntegration(lower_limit, upper_limit, sin, POINT_COUNT);
@@ -83,7 +83,7 @@ TEST(Monte_Carlo_Integration_MPI, Throws_then_negative_point_count) {
     srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double upper_limit = M_PI / 2;
+    const double upper_limit = PI / 2;
     const double lower_limit = 0.0;
 
     if (rank == 0) {
