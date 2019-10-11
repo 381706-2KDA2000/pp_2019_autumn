@@ -17,17 +17,18 @@ double monteCarloIntegration(double lower_limit, double upper_limit, double(*pfu
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int share = point_count / size;
+    int remain = point_count - share * (size - 1);
 
     if (rank == 0) {
         gen.seed(static_cast<unsigned int>(time(0)));
         for (int proc = 1; proc < size - 1; proc++) {
-            MPI_Send(pfunc, share, MPI_INT, proc, 0, MPI_COMM_WORLD);
+            MPI_Send(&share, 1, MPI_INT, proc, 0, MPI_COMM_WORLD);
         }
         if (size > 1)
-            MPI_Send(pfunc, point_count - share * (size - 1), MPI_INT, size - 1, 0, MPI_COMM_WORLD);
+            MPI_Send(&remain, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD);
     } else {
         MPI_Status status;
-        MPI_Recv(pfunc, share, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        MPI_Recv(&share, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
     }
 
     double local_sum = 0.0;
