@@ -72,8 +72,9 @@ int getCountFreqCharInStr(char* str, char ch) {
 
     if (delta != 0) {
         MPI_Reduce(&localCount, &globalCount, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    } else {
+        globalCount = localCount;
     }
-
     delete[] strLocal;
 
     return globalCount;

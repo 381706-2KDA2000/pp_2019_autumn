@@ -17,10 +17,10 @@ TEST(Mid_Value_Vector_MPI, Test_Random_Vector_Whith_2_Elements) {
     global_vector = getRandomVector(vector_size);
   }
 
-  int mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
+  double mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
 
   if (rank == 0) {
-    int mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
+    double mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
     ASSERT_EQ(mid_parallel, mid_sequential);
   }
 }
@@ -35,10 +35,10 @@ TEST(Mid_Value_Vector_MPI, Test_Random_Vector_With_10_Elements) {
   if (rank == 0) {
     global_vector = getRandomVector(vector_size);
   }
-  int mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
+  double mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
 
   if (rank == 0) {
-    int mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
+    double mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
     ASSERT_EQ(mid_parallel, mid_sequential);
   }
 }
@@ -55,10 +55,10 @@ TEST(Mid_Value_Vector_MPI, Test_Random_Vector_With_30_Elements) {
     global_vector = getRandomVector(vector_size);
   }
 
-  int mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
+  double mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
 
   if (rank == 0) {
-    int mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
+    double mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
     ASSERT_EQ(mid_parallel, mid_sequential);
   }
 }
@@ -70,11 +70,10 @@ TEST(Mid_Value_Vector_MPI, Test_Const_Vector) {
   std::vector <int> global_vector = {1, 2, 3, 4, 5, 6, 7, 8};
 
   const int vector_size = 8;
-
-  int mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
+  double mid_parallel = midValueOfVectorParallel(global_vector, vector_size);
 
   if (rank == 0) {
-    int mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
+    double mid_sequential = sumOfVectorSequential(global_vector) / vector_size;
     ASSERT_EQ(mid_parallel, mid_sequential);
   }
 }

@@ -3,8 +3,8 @@
 #define MODULES_TASK_1_SOKOLOV_A_VECTOR_MID_VALUE_VECTOR_MID_VALUE_H_
 #include <vector>
 
-std::vector<int> getRandomVector(int  size);
+std::vector<int> getRandomVector(int size);
 
-int midValueOfVectorParallel(const std::vector <int> vector, int vector_size);
-int sumOfVectorSequential(const std::vector <int> vector);
+double midValueOfVectorParallel(const std::vector <int> vector, int vector_size);
+double sumOfVectorSequential(const std::vector <int> vector);
 #endif  // MODULES_TASK_1_SOKOLOV_A_VECTOR_MID_VALUE_VECTOR_MID_VALUE_H_

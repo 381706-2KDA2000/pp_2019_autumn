@@ -18,9 +18,9 @@ std::vector<int> getRandomVector(int size) {
   return vector;
 }
 
-int midValueOfVectorParallel(const std::vector <int> vector, int vector_size) {
-  int global_sum = 0;
-  int local_sum = 0;
+double midValueOfVectorParallel(const std::vector <int> vector, int vector_size) {
+  double global_sum = 0.0;
+  double local_sum = 0.0;
   int comm_size, rank;
   MPI_Status status;
 
@@ -28,7 +28,7 @@ int midValueOfVectorParallel(const std::vector <int> vector, int vector_size) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   if (vector_size < comm_size) {
-    return sumOfVectorSequential(vector) / vector_size;
+    return sumOfVectorSequential(vector) / static_cast<double>(vector_size);
   }
   const int interval = vector_size / comm_size;
   const int last_interval = vector_size % comm_size;
@@ -53,15 +53,15 @@ int midValueOfVectorParallel(const std::vector <int> vector, int vector_size) {
   local_sum = sumOfVectorSequential(local_vector);
 
   if (interval != 0) {
-    MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_sum, &global_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
   }
 
-  return global_sum / vector_size;
+  return global_sum / static_cast<double>(vector_size);
 }
 
 
-int sumOfVectorSequential(const std::vector<int> vector) {
-  int sum = 0;
+double sumOfVectorSequential(const std::vector<int> vector) {
+  double sum = 0;
   int size = vector.size();
   for (int i = 0; i < size; i++) {
     sum += vector[i];
