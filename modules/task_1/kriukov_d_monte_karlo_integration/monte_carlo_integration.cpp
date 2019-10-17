@@ -11,34 +11,36 @@ double monteCarloIntegration(double lower_limit, double upper_limit, double(*pfu
         throw(1);
 
     std::mt19937 gen;
+    gen.seed(static_cast<unsigned int>(time(0)));
     std::uniform_real_distribution<> urd(0, 1);
 
     int size, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int share = point_count / size;
-    int remain = point_count - share * (size - 1);
+    double delta = (upper_limit - lower_limit) / size;
+    int local_count = point_count / size;
+    double tmp_lower;
 
     if (rank == 0) {
         gen.seed(static_cast<unsigned int>(time(0)));
-        for (int proc = 1; proc < size - 1; proc++) {
-            MPI_Send(&share, 1, MPI_INT, proc, 0, MPI_COMM_WORLD);
+        for (int proc = 1; proc < size; proc++) {
+            tmp_lower = lower_limit + delta * proc;
+            MPI_Send(&tmp_lower, 1, MPI_DOUBLE, proc, 0, MPI_COMM_WORLD);
         }
-        if (size > 1)
-            MPI_Send(&remain, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD);
+        tmp_lower = lower_limit;
     } else {
         MPI_Status status;
-        MPI_Recv(&share, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        MPI_Recv(&tmp_lower, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
     }
 
     double local_sum = 0.0;
     double global_sum = 0.0;
-
-    for (int i = 0; i < share; i++) {
-        local_sum += pfunc(lower_limit + urd(gen)*(upper_limit - lower_limit));
+    for (int i = 0; i < local_count; i++) {
+        local_sum += pfunc(tmp_lower + urd(gen)*delta);
     }
+    local_sum = local_sum * delta / local_count;
 
     MPI_Reduce(&local_sum, &global_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    return global_sum *(upper_limit - lower_limit) / point_count;
+    return global_sum;
 }
 
