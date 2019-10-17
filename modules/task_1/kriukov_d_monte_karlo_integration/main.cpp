@@ -18,7 +18,6 @@ double quadratic_function(double x) {
 
 TEST(Monte_Carlo_Integration_MPI, Linear_function_integration) {
     int rank;
-    srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     const double upper_limit = 5.0;
@@ -33,7 +32,6 @@ TEST(Monte_Carlo_Integration_MPI, Linear_function_integration) {
 
 TEST(Monte_Carlo_Integration_MPI, Linear_function_integration_with_negative_limit) {
     int rank;
-    srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     const double upper_limit = 0.0;
@@ -48,7 +46,6 @@ TEST(Monte_Carlo_Integration_MPI, Linear_function_integration_with_negative_limi
 
 TEST(Monte_Carlo_Integration_MPI, Quadratic_function_integration) {
     int rank;
-    srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     const double upper_limit = 3.0;
@@ -64,7 +61,6 @@ TEST(Monte_Carlo_Integration_MPI, Quadratic_function_integration) {
 
 TEST(Monte_Carlo_Integration_MPI, Trigonometric_function_integration) {
     int rank;
-    srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     const double pi = 3.14159265358979323846;
@@ -80,7 +76,6 @@ TEST(Monte_Carlo_Integration_MPI, Trigonometric_function_integration) {
 
 TEST(Monte_Carlo_Integration_MPI, Throws_then_negative_point_count) {
     int rank;
-    srand(time(NULL));
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     const double pi = 3.14159265358979323846;
