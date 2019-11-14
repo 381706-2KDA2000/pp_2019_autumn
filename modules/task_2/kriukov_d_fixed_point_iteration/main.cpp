@@ -21,7 +21,7 @@ TEST(Fixed_Point_Iteration_MPI, Test_Sequential) {
     }
 }
 
-TEST(Fixed_Point_Iteration_MPI, Test_Parralel) {
+TEST(Fixed_Point_Iteration_MPI, Test_Parralel_size_3) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     std::vector<double> matrix;
@@ -35,6 +35,25 @@ TEST(Fixed_Point_Iteration_MPI, Test_Parralel) {
     res = fixedPointIterationParralel(matrix, fterm, 3, FIXED_POINT_ITERATION_ERR);
     if (rank == 0) {
         double err = getAbsError(matrix, fterm, res, 3);
+        ASSERT_NEAR(err, 0, 1.0);
+    }
+}
+
+TEST(Fixed_Point_Iteration_MPI, Test_Parralel_size_4) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<double> matrix;
+    std::vector<double> fterm;
+    std::vector<double> res;
+
+    if (rank == 0) {
+        matrix = { 0.69,  0.09, 0, -0.03, 0.17, 0.66, -0.22,
+                   -0.2, 0.00012, 0.00003, 0.00402, 0.00011, 0.09,  0.06, 0.3, -0.76 };
+        fterm = { 4.06 , -0.73, -0.03751, 4.01 };
+    }
+    res = fixedPointIterationParralel(matrix, fterm, 4, FIXED_POINT_ITERATION_ERR);
+    if (rank == 0) {
+        double err = getAbsError(matrix, fterm, res, 4);
         ASSERT_NEAR(err, 0, 1.0);
     }
 }
@@ -74,28 +93,6 @@ TEST(Fixed_Point_Iteration_MPI, Test_Parralel_random) {
         ASSERT_NEAR(err, 0, 1.0);
     }
 }
-
-
-TEST(Fixed_Point_Iteration_MPI, Test_Parallel_equals_Sequential) {
-    int rank;
-    std::vector<double> resSequential;
-    std::vector<double> resParallel;
-    std::vector<double> matrix;
-        std::vector<double> vector;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    if (rank == 0) {
-        matrix = { 6.25, -1, 0.5 , -1, 5, 2.12, 0.5, 2.12, 3.6 };
-        vector = { 7.5, -8.68, -0.24 };
-        resSequential = fixedPointIterationSequential(matrix, vector, 3, FIXED_POINT_ITERATION_ERR);
-    }
-    resParallel = fixedPointIterationParralel(matrix, vector, 3, FIXED_POINT_ITERATION_ERR);
-    if (rank == 0) {
-        ASSERT_NEAR(resSequential[0], resParallel[0], 0.2);
-        ASSERT_NEAR(resSequential[1], resParallel[1], 0.2);
-        ASSERT_NEAR(resSequential[2], resParallel[2], 0.2);
-    }
-}
-
 
 #ifdef FIXED_POINT_ITERATION_TIME_TEST
 
