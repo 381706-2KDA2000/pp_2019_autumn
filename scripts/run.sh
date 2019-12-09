@@ -29,7 +29,7 @@ for file in $FILES_MPI; do
         NUM_PROC="1"
     fi
     echo "NUM_PROC: " $NUM_PROC
-    for i in {1..500}; do
+    for i in {1..1000}; do
         mpirun -np $NUM_PROC $file || exit 1
     done
 done
