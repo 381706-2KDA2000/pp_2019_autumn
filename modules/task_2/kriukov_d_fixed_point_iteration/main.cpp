@@ -6,6 +6,7 @@
 #include "./fixed_point_iteration.h"
 
 #define FIXED_POINT_ITERATION_ERR 0.0001
+//#define FIXED_POINT_ITERATION_TIME_TEST
 
 
 TEST(Fixed_Point_Iteration_MPI, Test_Sequential) {
@@ -21,6 +22,7 @@ TEST(Fixed_Point_Iteration_MPI, Test_Sequential) {
     }
 }
 
+
 TEST(Fixed_Point_Iteration_MPI, Test_Parralel_size_3) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -28,9 +30,28 @@ TEST(Fixed_Point_Iteration_MPI, Test_Parralel_size_3) {
     std::vector<double> fterm;
     std::vector<double> res;
 
+
     if (rank == 0) {
         matrix = { 6.25, -1, 0.5 , -1, 5, 2.12, 0.5, 2.12, 3.6 };
         fterm = { 7.5, -8.68, -0.24 };
+    }
+    res = fixedPointIterationParralel(matrix, fterm, 3, FIXED_POINT_ITERATION_ERR);
+    if (rank == 0) {
+        double err = getAbsError(matrix, fterm, res, 3);
+        ASSERT_NEAR(err, 0, 1.0);
+    }
+}
+
+TEST(Fixed_Point_Iteration_MPI, Test_Parralel_size_3_linearly_dependent) {
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    std::vector<double> matrix;
+    std::vector<double> fterm;
+    std::vector<double> res;
+
+    if (rank == 0) {
+        matrix = {0, 0, 0 , 0, 0, 0, 0, 0, 0 };
+        fterm = { 0, 0, 0 };
     }
     res = fixedPointIterationParralel(matrix, fterm, 3, FIXED_POINT_ITERATION_ERR);
     if (rank == 0) {
@@ -69,6 +90,16 @@ TEST(Fixed_Point_Iteration_MPI, Test_Sequential_random) {
     if (rank == 0) {
         matrix = getNormalMatrix(varcount);
         fterm = getRandomVector(varcount);
+        for (int i = 0; i < varcount*varcount; i++)
+        {
+            std::cout << " " << matrix[i];
+        }
+        std::cout << std::endl;
+        for (int i = 0; i < varcount; i++)
+        {
+            std::cout << " ";
+            std::cout << fterm[i];
+        }
         res = fixedPointIterationSequential(matrix, fterm, varcount, FIXED_POINT_ITERATION_ERR);
         double err = getAbsError(matrix, fterm, res, varcount);
         ASSERT_NEAR(err, 0, 1.0);
@@ -86,6 +117,16 @@ TEST(Fixed_Point_Iteration_MPI, Test_Parralel_random) {
     if (rank == 0) {
         matrix = getNormalMatrix(varcount);
         fterm = getRandomVector(varcount);
+        for (int i = 0; i < varcount*varcount; i++)
+        {
+            std::cout << " " << matrix[i];
+        }
+        std::cout << std::endl;
+        for (int i = 0; i < varcount; i++)
+        {
+            std::cout << " ";
+            std::cout << fterm[i];
+        }
     }
     res = fixedPointIterationParralel(matrix, fterm, varcount, FIXED_POINT_ITERATION_ERR);
     if (rank == 0) {
@@ -94,25 +135,32 @@ TEST(Fixed_Point_Iteration_MPI, Test_Parralel_random) {
     }
 }
 
+
 #ifdef FIXED_POINT_ITERATION_TIME_TEST
 
 TEST(Fixed_Point_Iteration_MPI, Time_Test_Parallel_random) {
     int rank;
     std::vector<double> resParallel;
+    std::vector<double> resSequaintal;
     std::vector<double> matrix;
     std::vector<double> vector;
-    double a, b;
-    const int vsize = 1000;
+    double a1, b1, a2, b2;
+    const int vsize = 2000;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
         matrix = getNormalMatrix(vsize);
         vector = getRandomVector(vsize);
+        a2 = MPI_Wtime();
+        resSequaintal = fixedPointIterationSequential(matrix, vector, vsize, FIXED_POINT_ITERATION_ERR);
+        b2 = MPI_Wtime();
     }
-    a = MPI_Wtime();
+    a1 = MPI_Wtime();
     resParallel = fixedPointIterationParralel(matrix, vector, vsize, FIXED_POINT_ITERATION_ERR);
-    b = MPI_Wtime();
-    if (rank == 0)
-        std::cout << b - a;
+    b1 = MPI_Wtime();
+    if (rank == 0) {
+        std::cout << "Sequential " << b2 - a2 << std::endl;
+        std::cout << "Parralel " << b1 - a1;
+    }
 }
 
 #endif
