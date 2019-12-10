@@ -142,7 +142,7 @@ TEST(Fixed_Point_Iteration_MPI, Time_Test_Parallel_random) {
     std::vector<double> vector;
     double a1, b1, a2, b2;
     const int vsize = 2000;
-	int * ptr = (int *)0;
+    int * ptr = static_cast<int *>(0);
     *ptr = 1;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
