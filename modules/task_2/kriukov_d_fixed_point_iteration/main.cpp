@@ -6,7 +6,7 @@
 #include "./fixed_point_iteration.h"
 
 #define FIXED_POINT_ITERATION_ERR 0.0001
-//#define FIXED_POINT_ITERATION_TIME_TEST
+// #define FIXED_POINT_ITERATION_TIME_TEST
 
 
 TEST(Fixed_Point_Iteration_MPI, Test_Sequential) {
@@ -90,13 +90,11 @@ TEST(Fixed_Point_Iteration_MPI, Test_Sequential_random) {
     if (rank == 0) {
         matrix = getNormalMatrix(varcount);
         fterm = getRandomVector(varcount);
-        for (int i = 0; i < varcount*varcount; i++)
-        {
+        for (int i = 0; i < varcount*varcount; i++) {
             std::cout << " " << matrix[i];
         }
         std::cout << std::endl;
-        for (int i = 0; i < varcount; i++)
-        {
+        for (int i = 0; i < varcount; i++) {
             std::cout << " ";
             std::cout << fterm[i];
         }
@@ -117,13 +115,11 @@ TEST(Fixed_Point_Iteration_MPI, Test_Parralel_random) {
     if (rank == 0) {
         matrix = getNormalMatrix(varcount);
         fterm = getRandomVector(varcount);
-        for (int i = 0; i < varcount*varcount; i++)
-        {
+        for (int i = 0; i < varcount*varcount; i++) {
             std::cout << " " << matrix[i];
         }
         std::cout << std::endl;
-        for (int i = 0; i < varcount; i++)
-        {
+        for (int i = 0; i < varcount; i++) {
             std::cout << " ";
             std::cout << fterm[i];
         }
