@@ -43,15 +43,6 @@ double multidimensionalIntegrationSequential(std::vector<double> start_point, do
 
 double multidimensionalIntegration(std::vector<double> start_point, double side, double(*pfunc)(std::vector<double>),
                                    bool(*parea)(std::vector<double>), unsigned int dimension, int point_count) {
-    if (point_count < 0)
-        throw(1);
-
-    if (side < 0)
-        throw(1);
-
-    if (dimension < 0)
-        throw(1);
-
     if (start_point.size() != dimension)
         throw(1);
 
