@@ -8,7 +8,7 @@
 #include "../../../modules/task_3/kriukov_d_multidimensional_monte_karlo/multidimensional_monte_karlo.h"
 
 double multidimensionalIntegrationSequential(std::vector<double> start_point, double side,
-    double(*pfunc)(std::vector<double>), bool(*parea)(std::vector<double>), int dimension, int point_count) {
+    double(*pfunc)(std::vector<double>), bool(*parea)(std::vector<double>), unsigned int dimension, int point_count) {
     std::mt19937 gen;
     time_t curr_time = static_cast<time_t>(0);
     gen.seed(static_cast<unsigned int>(time(&curr_time)));
@@ -16,7 +16,7 @@ double multidimensionalIntegrationSequential(std::vector<double> start_point, do
     int delta = point_count;
 
     std::vector<double> points(dimension * delta);
-    for (int i = 0; i < points.size(); i++) {
+    for (unsigned int i = 0; i < points.size(); i++) {
         points[i] = start_point[i%dimension] + urd(gen)*side;
     }
 
@@ -42,7 +42,7 @@ double multidimensionalIntegrationSequential(std::vector<double> start_point, do
 
 
 double multidimensionalIntegration(std::vector<double> start_point, double side, double(*pfunc)(std::vector<double>),
-                                   bool(*parea)(std::vector<double>), int dimension, int point_count) {
+                                   bool(*parea)(std::vector<double>), unsigned int dimension, int point_count) {
     if (point_count < 0)
         throw(1);
 
@@ -66,7 +66,7 @@ double multidimensionalIntegration(std::vector<double> start_point, double side,
     int delta = point_count / size;
 
     std::vector<double> points(dimension * delta);
-    for (int i = 0; i < points.size(); i++) {
+    for (unsigned int i = 0; i < points.size(); i++) {
         points[i] = start_point[i%dimension] + urd(gen)*side;
     }
 
