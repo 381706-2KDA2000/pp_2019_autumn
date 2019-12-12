@@ -25,7 +25,7 @@ double multidimensionalIntegrationSequential(std::vector<double> start_point, do
 
     for (int i = 0; i < delta; ++i) {
         std::vector<double> cpoint;
-        for (int j = 0; j < dimension; ++j) {
+        for (unsigned int j = 0; j < dimension; ++j) {
             cpoint.push_back(points[dimension * i + j]);
         }
         if (parea(cpoint)) {
@@ -77,7 +77,7 @@ double multidimensionalIntegration(std::vector<double> start_point, double side,
 
     for (int i = 0; i < delta; ++i) {
         std::vector<double> cpoint;
-        for (int j = 0; j < dimension; ++j) {
+        for (unsigned int j = 0; j < dimension; ++j) {
             cpoint.push_back(points[dimension * i + j]);
         }
         if (parea(cpoint)) {
