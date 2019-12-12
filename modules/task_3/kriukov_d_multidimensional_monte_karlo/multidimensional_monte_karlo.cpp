@@ -7,8 +7,8 @@
 #include <iostream>
 #include "../../../modules/task_3/kriukov_d_multidimensional_monte_karlo/multidimensional_monte_karlo.h"
 
-double multidimensionalIntegrationSequential(std::vector<double> start_point, double side, double(*pfunc)(std::vector<double>),
-    bool(*parea)(std::vector<double>), int dimension, int point_count) {
+double multidimensionalIntegrationSequential(std::vector<double> start_point, double side,
+    double(*pfunc)(std::vector<double>), bool(*parea)(std::vector<double>), int dimension, int point_count) {
     std::mt19937 gen;
     time_t curr_time = static_cast<time_t>(0);
     gen.seed(static_cast<unsigned int>(time(&curr_time)));
