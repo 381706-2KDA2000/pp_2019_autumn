@@ -89,7 +89,7 @@ TEST(Multidimensional_Monte_Karlo_MPI, quadratic_func_integration_on_area_sphere
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double abs_errror = 2.0;
+    const double abs_errror = 5.0;
 
     std::vector<double> s_point = { -2, -2, -2 };
 
