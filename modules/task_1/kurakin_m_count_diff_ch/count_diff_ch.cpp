@@ -7,8 +7,9 @@
 #include <random>
 #include <string>
 #include <vector>
-
 std::string getRandomString(int size) {
+    std::mt19937 gen;
+    gen.seed(time(0));
     static const char alphanum[] =
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -16,7 +17,7 @@ std::string getRandomString(int size) {
     int alphanumLen = std::strlen(alphanum);
     std::string str(size, 0);
     for (int i = 0; i < size; ++i) {
-        str[i] = alphanum[rand() % (alphanumLen - 1)];
+        str[i] = alphanum[gen() % (alphanumLen - 1)];
     }
     return str;
 }
@@ -28,52 +29,18 @@ int getCountDiffChPar(std::string str1, std::string str2) {
     int step =  str1.length() / size;
     int start = rank * step;
     int end = start + step;
-    int localCounter = 0;
-    int globCounter = 0;
-    bool uniq;
-    for (int i = start; i < end; i++) {
-        uniq = true;
-        for (int j = 0; j < static_cast<int>(str2.length()); j++) {
-            if (str1[i] == str2[j]) {
-                uniq = false;
-            }
-        }
-        if (uniq == true) {
-            localCounter++;
-        }
+    int localResult = 0, result;
+    if (rank == (size - 1)) {
+        end = str1.length();
     }
-    int newEnd = 0;
-    MPI_Reduce(&end, &newEnd, 1, MPI_INT, MPI_MAX, 0,
-                MPI_COMM_WORLD);
+    localResult = getCountDiffChSeq(str1, str2, start, end);
     MPI_Barrier(MPI_COMM_WORLD);
-    if (rank == 0) {
-        int remainChAmount = str1.length() % size;
-         if (remainChAmount != 0) {
-            start = newEnd;
-            newEnd = str1.length();
-             for (int i = start; i < newEnd; i++) {
-                uniq = true;
-                for (int j = 0; j < static_cast<int>(str2.length()); j++) {
-                    if (str1[i] == str2[j]) {
-                        uniq = false;
-                    }
-                }
-                if (uniq == true) {
-                    localCounter++;
-                }
-            }
-        }
-    }
-    MPI_Reduce(&localCounter, &globCounter, 1, MPI_INT, MPI_SUM, 0,
+    MPI_Reduce(&localResult, &result, 1, MPI_INT, MPI_SUM, 0,
                MPI_COMM_WORLD);
-    MPI_Barrier(MPI_COMM_WORLD);
-    globCounter = (str2.length() - str1.length()) + 2 * globCounter;
-    return globCounter;
+    return result;
 }
 
-int getCountDiffChSeq(std::string str1, std::string str2) {
-    int start = 0;
-    int end = str1.length();
+int getCountDiffChSeq(std::string str1, std::string str2, int start, int end) {
     int counter = 0;
     bool uniq;
     for (int i = start; i < end; i++) {

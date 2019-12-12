@@ -12,9 +12,9 @@ TEST(Count_Diff_Ch_MPI, Test_Rand_Str) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     srand(time(NULL));
     unsigned int expLen = 4;
-    std::string str = getRandomString(4);
     if (rank == 0) {
-        EXPECT_EQ(expLen, str.length());
+    std::string str = getRandomString(4);
+        ASSERT_EQ(expLen, str.length());
     }
 }
 TEST(Count_Diff_Ch_MPI, Test_Find_Count_Diff_Ch_Sequential) {
@@ -25,48 +25,51 @@ TEST(Count_Diff_Ch_MPI, Test_Find_Count_Diff_Ch_Sequential) {
     std::string str2 = "arbuz6789x";
     int countDiff;
     if (rank == 0) {
-        countDiff = getCountDiffChSeq(str1, str2);
-        EXPECT_EQ(expResult, countDiff);
+        countDiff = getCountDiffChSeq(str1, str2, 0, str1.length());
+        ASSERT_EQ(expResult, countDiff);
     }
 }
 TEST(Count_Diff_Ch_MPI, Test_Find_Count_Diff_Ch_Sequential_Rand) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    srand(time(NULL));
     std::string str1, str2;
     if (rank == 0) {
     str1 = getRandomString(200);
     str2 = getRandomString(200);
-    }
-    if (rank == 0) {
-        ASSERT_NO_THROW(getCountDiffChSeq(str1, str2));
+    ASSERT_NO_THROW(getCountDiffChSeq(str1, str2, 0, str1.length()));
     }
 }
+
+TEST(Count_Diff_Char_MPI, Count_Diff_Char_Same_Str) {
+  int rank;
+  int expResult = 0;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  std::string str1, str2;
+  str1 = "123456789";
+  str2 = "123456789";
+  int countDiff;
+  countDiff = getCountDiffChPar(str1, str2);
+  if (rank == 0) {
+    ASSERT_EQ(expResult, countDiff);
+  }
+}
+
 TEST(Count_Diff_Ch_MPI, Test_Find_Count_Diff_Ch_Parallel) {
     int rank;
     int expResult;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    std::string str1 = "Mika12349";
-    std::string str2 = "arbuz5678x";
-    int countDiff = getCountDiffChPar(str1, str2);
-    if (rank == 0) {
-        expResult = getCountDiffChSeq(str1, str2);
-        EXPECT_EQ(expResult, countDiff);
+    std::string str1;
+    std::string str2;
+    for (int i = 0; i < 10000; i++) {
+        str1.append("2");
+        str2.append("1");
     }
-}
-
-TEST(Count_Diff_Ch_MPI, Test_Find_Count_Diff_Ch_Parallel_Rand) {
-    int rank;
-    int expResult;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    srand(time(NULL));
-    std::string str1, str2;
-    str1 = getRandomString(300);
-    str2 = getRandomString(300);
+    str1.append("0");
+    str2.append("0");
     int countDiff = getCountDiffChPar(str1, str2);
     if (rank == 0) {
-        expResult = getCountDiffChSeq(str1, str2);
-        EXPECT_EQ(expResult, countDiff);
+        expResult = getCountDiffChSeq(str1, str2, 0, str1.length());
+        ASSERT_EQ(expResult, countDiff);
     }
 }
 
