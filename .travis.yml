@@ -30,7 +30,6 @@ install:
 
 script:
 - git submodule update --init --recursive
-- python scripts/lint.py
 - mkdir build
 - cd build
 - cmake -D USE_MPI=ON -D USE_OMP=ON -D USE_TBB=ON -D CMAKE_BUILD_TYPE=RELEASE ..
