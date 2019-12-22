@@ -74,7 +74,7 @@ TEST(Multidimensional_Monte_Karlo_MPI, const_func_integration_on_area_sphere) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double abs_errror = 2.0;
+    const double abs_errror = 5.0;
 
     std::vector<double> s_point = { -2, -2, -2};
 
@@ -115,7 +115,6 @@ TEST(Multidimensional_Monte_Karlo_MPI, const_func_integration_on_area_three_sphe
     }
 }
 
-
 #ifdef MULTIDIMENSIONAL_MONTE_KARLO_TIME_TEST
 
 TEST(Multidimensional_Monte_Karlo_MPI, Time_Test) {
@@ -136,10 +135,13 @@ TEST(Multidimensional_Monte_Karlo_MPI, Time_Test) {
         b2 = MPI_Wtime();
     }
 
-    a1 = MPI_Wtime();
+    if(rank == 0)
+        a1 = MPI_Wtime();
     double integration_result = multidimensionalIntegration(s_point, 4, func_const,
         area_three_sphere_radius_2, 4, point_count);
-    b1 = MPI_Wtime();
+    if (rank == 0)
+        b1 = MPI_Wtime();
+
     if (rank == 0) {
         std::cout << "Sequential " << b2 - a2 << std::endl;
         std::cout << "Parralel " << b1 - a1;
