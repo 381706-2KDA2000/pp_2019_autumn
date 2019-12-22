@@ -44,7 +44,7 @@ TEST(Multidimensional_Monte_Karlo_MPI, const_func_integration_on_area_circle) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double abs_errror = 0.5;
+    const double abs_errror = 1.0;
 
     std::vector<double> s_point = { -2, -2 };
 
@@ -59,7 +59,7 @@ TEST(Multidimensional_Monte_Karlo_MPI, linear_func_integration_on_area_2_parabol
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double abs_errror = 0.5;
+    const double abs_errror = 1.0;
 
     std::vector<double> s_point = { -1, -1 };
 
@@ -121,7 +121,7 @@ TEST(Multidimensional_Monte_Karlo_MPI, Time_Test) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    const double abs_errror = 10.0;
+    const double abs_errror = 0.5;
     const int point_count = 1000000;
 
     std::vector<double> s_point = { -2, -2 , -2, -2 };
@@ -135,7 +135,7 @@ TEST(Multidimensional_Monte_Karlo_MPI, Time_Test) {
         b2 = MPI_Wtime();
     }
 
-    if(rank == 0)
+    if (rank == 0)
         a1 = MPI_Wtime();
     double integration_result = multidimensionalIntegration(s_point, 4, func_const,
         area_three_sphere_radius_2, 4, point_count);
@@ -145,6 +145,9 @@ TEST(Multidimensional_Monte_Karlo_MPI, Time_Test) {
     if (rank == 0) {
         std::cout << "Sequential " << b2 - a2 << std::endl;
         std::cout << "Parralel " << b1 - a1;
+    }
+    if (rank == 0) {
+        ASSERT_NEAR(3.14 * 3.14 * 16 / 2, integration_result, abs_errror);
     }
 }
 

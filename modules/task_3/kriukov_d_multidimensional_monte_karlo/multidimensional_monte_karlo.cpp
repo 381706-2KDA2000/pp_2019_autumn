@@ -51,8 +51,7 @@ double multidimensionalIntegration(std::vector<double> start_point, double side,
     int delta = point_count / size;
     std::vector<double> points(dimension * point_count);
 
-    if (rank == 0)
-    {
+    if (rank == 0) {
         std::mt19937 gen;
         gen.seed(static_cast<unsigned int>(time(NULL)));
         std::uniform_real_distribution<> urd(0, 1);
